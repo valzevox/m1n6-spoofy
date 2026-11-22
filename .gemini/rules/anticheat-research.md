@@ -14,6 +14,10 @@
 - Trace account-linking vectors: Steam client registry, `loginusers.vdf`, Volume Serial Numbers (NTFS/FAT32), Network ARP/DNS.
 - Distinguish hardware blacklist flags (permanent ban) from investigation watchlist flags (24h ban caused by account linking via Steam `loginusers.vdf` + volume serials + network ARP).
 
+## Separation of Spoofer vs Cheat/AI Modules
+- Keep Core Spoofer (cleaner, volume changer, EFI bootloader) strictly decoupled from cheat/AI aimbot logic.
+- AI, ESP, Overlay Hijack and Recoil research must be maintained exclusively in dedicated markdown documentation files under `docs/architecture/` (no orphaned cheat code inside spoofer binaries).
+
 ## UEFI Pre-OS Interception Invariants
 - NVMe SN: Hook `EFI_DISK_INFO_PROTOCOL->Identify`, modify offset `0x04` (20 bytes ASCII).
 - ATA SN: Modify offset `0x14` (20 bytes ASCII, byte-swapped pairs).
