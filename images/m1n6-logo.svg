@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0c14" />
+      <stop offset="50%" stop-color="#0f1422" />
+      <stop offset="100%" stop-color="#06080d" />
+    </linearGradient>
+
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="50%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#7000ff" />
+    </linearGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="50%" stop-color="#9d4edd" />
+      <stop offset="100%" stop-color="#ff007f" />
+    </linearGradient>
+
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#e0f7fa" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+
+    <!-- Filters for Cyber Glow -->
+    <filter id="cyberGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="900" height="320" rx="16" fill="url(#bgGrad)" stroke="#1f293d" stroke-width="2" />
+
+  <!-- Circuit & Grid Details -->
+  <g opacity="0.12" stroke="#00f2fe" stroke-width="1.2" fill="none">
+    <path d="M 0,40 L 900,40 M 0,80 L 900,80 M 0,120 L 900,120 M 0,160 L 900,160 M 0,200 L 900,200 M 0,240 L 900,240 M 0,280 L 900,280" />
+    <path d="M 60,0 L 60,320 M 160,0 L 160,320 M 260,0 L 260,320 M 640,0 L 640,320 M 740,0 L 740,320 M 840,0 L 840,320" />
+    <path d="M 120,50 L 190,50 L 220,80 L 300,80" />
+    <path d="M 780,270 L 710,270 L 680,240 L 600,240" />
+  </g>
+
+  <!-- Left: Tech Shield / Hardware Chip Emblem -->
+  <g transform="translate(140, 160)" filter="url(#cyberGlow)">
+    <!-- Outer Shield Hexagon -->
+    <polygon points="0,-95 82,-47 82,47 0,95 -82,47 -82,-47" fill="#0d1527" stroke="url(#shieldGrad)" stroke-width="3.5" />
+    
+    <!-- Inner Chip Ring -->
+    <polygon points="0,-75 65,-37 65,37 0,75 -65,37 -65,-37" fill="#111c33" stroke="#00f2fe" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.8" />
+
+    <!-- Chip Pins -->
+    <g stroke="url(#shieldGrad)" stroke-width="3">
+      <line x1="-98" y1="-25" x2="-82" y2="-25" />
+      <line x1="-98" y1="0" x2="-82" y2="0" />
+      <line x1="-98" y1="25" x2="-82" y2="25" />
+      
+      <line x1="82" y1="-25" x2="98" y2="-25" />
+      <line x1="82" y1="0" x2="98" y2="0" />
+      <line x1="82" y1="25" x2="98" y2="25" />
+
+      <line x1="-30" y1="-88" x2="-30" y2="-102" />
+      <line x1="0" y1="-95" x2="0" y2="-110" />
+      <line x1="30" y1="-88" x2="30" y2="-102" />
+
+      <line x1="-30" y1="88" x2="-30" y2="102" />
+      <line x1="0" y1="95" x2="0" y2="110" />
+      <line x1="30" y1="88" x2="30" y2="102" />
+    </g>
+
+    <!-- Center Tech Core: Keyhole & Microchip -->
+    <rect x="-26" y="-26" width="52" height="52" rx="10" fill="#060a12" stroke="url(#accentGrad)" stroke-width="2.5" />
+    <circle cx="0" cy="-6" r="8" fill="#00f2fe" />
+    <polygon points="-6,-4 6,-4 10,14 -10,14" fill="#00f2fe" />
+    <circle cx="0" cy="5" r="3" fill="#060a12" />
+  </g>
+
+  <!-- Right: Branding & Typography -->
+  <g transform="translate(290, 0)">
+    <!-- Badge Tag -->
+    <rect x="0" y="70" width="180" height="26" rx="6" fill="#14213d" stroke="#00f2fe" stroke-width="1" opacity="0.9" />
+    <text x="12" y="87" font-family="'Segoe UI', Roboto, 'Helvetica Neue', sans-serif" font-size="11" font-weight="800" fill="#00f2fe" letter-spacing="2">HWID SPOOFER V1.5.8</text>
+
+    <!-- Main Title: M1N6 -->
+    <text x="0" y="162" font-family="'Segoe UI', Roboto, 'Impact', sans-serif" font-size="76" font-weight="900" fill="url(#textGrad)" letter-spacing="4" filter="url(#cyberGlow)">
+      M1N6<tspan fill="#ff007f">.</tspan><tspan fill="#4facfe" font-size="52" font-weight="700">SPOOFY</tspan>
+    </text>
+
+    <!-- Accent Underline -->
+    <rect x="0" y="180" width="480" height="4" rx="2" fill="url(#accentGrad)" />
+
+    <!-- Subtitle / Tagline -->
+    <text x="0" y="215" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="600" fill="#94a3b8" letter-spacing="3">
+      NEXT-GEN HARDWARE CLOAK &amp; SYSTEM CLEANER
+    </text>
+
+    <!-- Tech Badges inline -->
+    <g transform="translate(0, 238)" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">
+      <rect x="0" y="0" width="85" height="24" rx="4" fill="#0f172a" stroke="#334155" />
+      <text x="10" y="16" fill="#38bdf8">.NET 6.0</text>
+
+      <rect x="95" y="0" width="95" height="24" rx="4" fill="#0f172a" stroke="#334155" />
+      <text x="105" y="16" fill="#a855f7">WIN 10 / 11</text>
+
+      <rect x="200" y="0" width="105" height="24" rx="4" fill="#0f172a" stroke="#334155" />
+      <text x="210" y="16" fill="#ec4899">USER-MODE</text>
+
+      <rect x="315" y="0" width="90" height="24" rx="4" fill="#0f172a" stroke="#334155" />
+      <text x="325" y="16" fill="#10b981">CLEANER</text>
+    </g>
+  </g>
+</svg>

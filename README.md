@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/m1n6-logo.png" alt="m1n6 logo" width="160" />
+  <img src="images/m1n6-logo.svg" alt="m1n6-spoofy banner" width="100%" />
 </p>
 
 # m1n6-spoofy [1.5.8]
