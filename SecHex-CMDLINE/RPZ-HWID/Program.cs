@@ -380,6 +380,46 @@ namespace HWID_Changer
             }
         }
 
+        public static void DeleteRobRunCache()
+        {
+            try
+            {
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+
+                string[] robRunDirs = new string[]
+                {
+                    Path.Combine(localAppData, "RobRun"),
+                    Path.Combine(localAppData, "ROB_RUN"),
+                    Path.Combine(localAppData, "Rob_Run"),
+                    Path.Combine(appData, "EasyAntiCheat"),
+                    Path.Combine(programData, "EasyAntiCheat")
+                };
+
+                foreach (string dir in robRunDirs)
+                {
+                    if (Directory.Exists(dir))
+                    {
+                        Directory.Delete(dir, true);
+                    }
+                }
+
+                string steamLogin = @"C:\Program Files (x86)\Steam\config\loginusers.vdf";
+                if (File.Exists(steamLogin))
+                {
+                    File.Delete(steamLogin);
+                }
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("arp", "-d *") { CreateNoWindow = true, UseShellExecute = false })?.WaitForExit(5000);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ipconfig", "/flushdns") { CreateNoWindow = true, UseShellExecute = false })?.WaitForExit(5000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error deleting ROB RUN cache: " + ex.Message);
+            }
+        }
+
 
 
         public static bool SpoofMAC() //SpoofMacREAL
@@ -733,6 +773,7 @@ namespace HWID_Changer
                     UbisoftCache();
                     DeleteValorantCache();
                     DeletePubgCache();
+                    DeleteRobRunCache();
                     SpoofGPU();
                     SpoofPCName();
                     SpoofEFIVariableId();
@@ -746,6 +787,14 @@ namespace HWID_Changer
                     // Delete PUBG & Steam cache
                     DeletePubgCache();
                     Console.WriteLine("\n  [+] PUBG, BattlEye & Steam cache deleted");
+                    ClearConsoleAfterDelay();
+                    Menu();
+                    break;
+
+                case "15":
+                    // Delete ROB RUN & EAC cache
+                    DeleteRobRunCache();
+                    Console.WriteLine("\n  [+] ROB RUN, EasyAntiCheat & Steam cache deleted");
                     ClearConsoleAfterDelay();
                     Menu();
                     break;
@@ -806,6 +855,7 @@ namespace HWID_Changer
             Console.WriteLine("[12] Get System informations                ");
             Console.WriteLine("[13] Spoof all                              ");
             Console.WriteLine("[14] Delete PUBG & Steam Cache              ");
+            Console.WriteLine("[15] Delete ROB RUN & EAC Cache             ");
             Console.WriteLine("[exit] Exit                                 ");
             Console.WriteLine("  ");
             Console.ForegroundColor

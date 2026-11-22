@@ -534,6 +534,96 @@ namespace SecHex_GUI
             }
         }
 
+        public void CleanRobRunAndEacTraces()
+        {
+            try
+            {
+                // 1. Terminate ROB RUN and Easy Anti-Cheat processes
+                KillProcess("RobRun.exe");
+                KillProcess("RobRun-Win64-Shipping.exe");
+                KillProcess("RobRun_Win64_Shipping.exe");
+                KillProcess("EasyAntiCheat.exe");
+                KillProcess("EasyAntiCheat_EOS.exe");
+                KillProcess("EasyAntiCheat_Setup.exe");
+                KillProcess("steam.exe");
+                KillProcess("steamwebhelper.exe");
+
+                StopService("EasyAntiCheat");
+                StopService("EasyAntiCheat_EOS");
+
+                // 2. Clear ROB RUN Game Cache & Logs
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+
+                DeleteDirectory(Path.Combine(localAppData, "RobRun"));
+                DeleteDirectory(Path.Combine(localAppData, "ROB_RUN"));
+                DeleteDirectory(Path.Combine(localAppData, "Rob_Run"));
+                DeleteDirectory(Path.Combine(appData, "EasyAntiCheat"));
+                DeleteDirectory(Path.Combine(programData, "EasyAntiCheat"));
+
+                string progFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                DeleteDirectory(Path.Combine(progFilesX86, "EasyAntiCheat"));
+                DeleteDirectory(Path.Combine(progFilesX86, "EasyAntiCheat_EOS"));
+
+                // 3. Clear Steam Account Chaining Traces
+                string[] possibleSteamPaths = new string[]
+                {
+                    @"C:\Program Files (x86)\Steam",
+                    @"C:\Program Files\Steam",
+                    @"D:\Steam",
+                    @"E:\Steam"
+                };
+
+                foreach (string steamDir in possibleSteamPaths)
+                {
+                    if (Directory.Exists(steamDir))
+                    {
+                        string loginUsersFile = Path.Combine(steamDir, "config", "loginusers.vdf");
+                        if (File.Exists(loginUsersFile))
+                        {
+                            File.Delete(loginUsersFile);
+                        }
+
+                        string configFile = Path.Combine(steamDir, "config", "config.vdf");
+                        if (File.Exists(configFile))
+                        {
+                            File.Delete(configFile);
+                        }
+
+                        string userDataDir = Path.Combine(steamDir, "userdata");
+                        if (Directory.Exists(userDataDir))
+                        {
+                            foreach (var sub in Directory.GetDirectories(userDataDir))
+                            {
+                                DeleteDirectory(sub);
+                            }
+                        }
+                    }
+                }
+
+                // 4. Clean Registry EAC & Steam Entries
+                DeleteRegistryKey(@"Software\Valve\Steam\Users");
+                DeleteRegistryKey(@"Software\EasyAntiCheat");
+
+                // 5. Network ARP & DNS Flush
+                RunCommand("arp", "-d *");
+                RunCommand("ipconfig", "/flushdns");
+                RunCommand("ipconfig", "/release");
+                RunCommand("ipconfig", "/renew");
+
+                // 6. Randomize Volume IDs
+                VolumeIdChanger.SpoofDriveVolumeId('C', out string newC, out _);
+                VolumeIdChanger.SpoofDriveVolumeId('D', out string newD, out _);
+
+                ShowNotification("ROB RUN, EAC EOS & Steam traces cleared. Volume IDs randomized.\nRestart PC and change Router IP before logging in.", NotificationType.Success);
+            }
+            catch (Exception ex)
+            {
+                ShowNotification("Error cleaning ROB RUN traces: " + ex.Message, NotificationType.Error);
+            }
+        }
+
 
         // THANKS TO Starcharms -> github.com/starcharms
 
