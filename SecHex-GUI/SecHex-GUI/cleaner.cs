@@ -448,6 +448,92 @@ namespace SecHex_GUI
             }
         }
 
+        public void CleanPubgAndSteamTraces()
+        {
+            try
+            {
+                // 1. Terminate all PUBG & Steam processes
+                KillProcess("TslGame.exe");
+                KillProcess("TslGame_ZK.exe");
+                KillProcess("ExecPubg.exe");
+                KillProcess("ucldr_battlegrounds_gl.exe");
+                KillProcess("steam.exe");
+                KillProcess("steamwebhelper.exe");
+                KillProcess("BEService.exe");
+                KillProcess("BEService_x64.exe");
+                KillProcess("BattleEye.exe");
+                KillProcess("x3.xem");
+
+                StopService("BEService");
+                StopService("xhunter1");
+
+                // 2. Clear PUBG / Zakynthos Telemetry & Logs
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                DeleteDirectory(Path.Combine(localAppData, "TslGame"));
+                DeleteDirectory(Path.Combine(localAppData, "BattlEye"));
+
+                string commonFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFilesX86);
+                string commonFiles = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles);
+                DeleteDirectory(Path.Combine(commonFilesX86, "Wellbia.com"));
+                DeleteDirectory(Path.Combine(commonFiles, "Wellbia.com"));
+
+                // 3. Clear Steam Account Chaining Traces (loginusers.vdf & config)
+                string[] possibleSteamPaths = new string[]
+                {
+                    @"C:\Program Files (x86)\Steam",
+                    @"C:\Program Files\Steam",
+                    @"D:\Steam",
+                    @"E:\Steam"
+                };
+
+                foreach (string steamDir in possibleSteamPaths)
+                {
+                    if (Directory.Exists(steamDir))
+                    {
+                        string loginUsersFile = Path.Combine(steamDir, "config", "loginusers.vdf");
+                        if (File.Exists(loginUsersFile))
+                        {
+                            File.Delete(loginUsersFile);
+                        }
+
+                        string configFile = Path.Combine(steamDir, "config", "config.vdf");
+                        if (File.Exists(configFile))
+                        {
+                            File.Delete(configFile);
+                        }
+
+                        string userDataDir = Path.Combine(steamDir, "userdata");
+                        if (Directory.Exists(userDataDir))
+                        {
+                            foreach (var sub in Directory.GetDirectories(userDataDir))
+                            {
+                                DeleteDirectory(sub);
+                            }
+                        }
+                    }
+                }
+
+                // 4. Clean Registry Steam User Cache
+                DeleteRegistryKey(@"Software\Valve\Steam\Users");
+
+                // 5. Network ARP & DNS Flush
+                RunCommand("arp", "-d *");
+                RunCommand("ipconfig", "/flushdns");
+                RunCommand("ipconfig", "/release");
+                RunCommand("ipconfig", "/renew");
+
+                // 6. Spoof Volume Serial Numbers for System Drives
+                VolumeIdChanger.SpoofDriveVolumeId('C', out string newC, out _);
+                VolumeIdChanger.SpoofDriveVolumeId('D', out string newD, out _);
+
+                ShowNotification("PUBG, Zakynthos & Steam traces cleared. Volume IDs randomized.\nRestart PC and change Router IP before logging into a new account.", NotificationType.Success);
+            }
+            catch (Exception ex)
+            {
+                ShowNotification("Error cleaning PUBG traces: " + ex.Message, NotificationType.Error);
+            }
+        }
+
 
         // THANKS TO Starcharms -> github.com/starcharms
 

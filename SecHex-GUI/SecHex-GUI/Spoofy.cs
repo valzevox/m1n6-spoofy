@@ -384,6 +384,20 @@ namespace SecHex_GUI
                 BIOSReleaseDate_Click(sender, e);
                 MachineId_Click(sender, e);
 
+                // Spoof NTFS Volume Serial Numbers
+                try
+                {
+                    if (VolumeIdChanger.SpoofDriveVolumeId('C', out string newC, out _))
+                    {
+                        SaveLogs("volumeid", "Drive C: Serial", newC);
+                    }
+                    if (VolumeIdChanger.SpoofDriveVolumeId('D', out string newD, out _))
+                    {
+                        SaveLogs("volumeid", "Drive D: Serial", newD);
+                    }
+                }
+                catch { }
+
                 ShowNotification("All functions executed successfully.", NotificationType.Success);
             }
             else

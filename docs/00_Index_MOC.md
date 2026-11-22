@@ -9,6 +9,7 @@
 ## 📌 Quick Links (Obsidian Wiki-Links)
 
 - **Architecture Overview**: [[docs/architecture/overview]]
+- **PUBG Anti-Cheat Stack & 24h Ban Analysis**: [[docs/architecture/pubg_anticheat_ecosystem]]
 - **Kernel Anti-Cheat Analysis (Vanguard, ACE, EAC)**: [[docs/architecture/kernel_anticheat_analysis]]
 - **UEFI Bootloader Engine (m1n6-EFI)**: [[docs/architecture/uefi_bootloader]]
 - **Component & Execution Flow**: [[docs/architecture/components]]
@@ -25,19 +26,16 @@
 ```mermaid
 graph TD
     MOC[00_Index_MOC] --> ARCH[Architecture Overview]
+    MOC --> PUBG[PUBG Anti-Cheat Ecosystem]
     MOC --> KERNEL[Kernel Anti-Cheat Analysis]
     MOC --> EFI[m1n6-EFI Bootloader]
     MOC --> REG[Registry & Vectors]
     MOC --> MOD[Core Modules]
-    MOC --> RULES[Project Rules]
 
-    KERNEL --> AC[Vanguard / ACE / EAC Telemetry]
-    EFI --> BOOT[DXE Pre-OS SMBIOS / Disk Hooks]
-    ARCH --> COMP[Components & Data Flow]
-    MOD --> SPOOF[Spoofing Engine]
-    MOD --> CLEAN[Cleaner & Process Terminator]
-    REG --> KEYS[Hardware Registry Keys]
-    RULES --> CODE[Coding Standards]
+    PUBG --> BE_XIGN_ZK[BattlEye + XIGNCODE3 + Zakynthos]
+    PUBG --> DELAY_BAN[24h Investigation / Flagged Machine]
+    MOD --> VOL[NTFS Volume ID Changer]
+    MOD --> CLEAN_PUBG[PUBG & Steam Trace Cleaner]
 ```
 
 ---
@@ -45,15 +43,16 @@ graph TD
 ## 📂 Vault Structure
 
 - `docs/architecture/`
-  - [[docs/architecture/overview]]: Tổng quan kiến trúc hệ thống, phân tầng CLI vs GUI, ranh giới UserMode vs Ring 0.
-  - [[docs/architecture/kernel_anticheat_analysis]]: Phân tích chuyên sâu các vector ban phần cứng của Vanguard, Tencent ACE, EAC, BattlEye trên Windows 11 (23H2 / 24H2).
+  - [[docs/architecture/pubg_anticheat_ecosystem]]: Phân tích chuyên sâu 3 hệ thống Anti-Cheat của PUBG (BattlEye, XIGNCODE3, Zakynthos), cơ chế liên kết tài khoản cũ và lý do bị cấm 24h tự động.
+  - [[docs/architecture/kernel_anticheat_analysis]]: Phân tích telemetry cấp kernel của Vanguard, ACE, EAC, BattlEye trên Windows 11.
   - [[docs/architecture/uefi_bootloader]]: Thiết kế kỹ thuật module EFI Bootloader can thiệp SMBIOS và Disk Table trước khi Windows boot.
+  - [[docs/architecture/overview]]: Tổng quan kiến trúc hệ thống, phân tầng CLI vs GUI.
   - [[docs/architecture/components]]: Luồng dữ liệu, tiến trình thực thi, lifecycle và dependency.
 - `docs/registry/`
   - [[docs/registry/hardware_keys]]: Toàn bộ sơ đồ các nhánh Registry Windows bị tác động.
 - `docs/modules/`
-  - [[docs/modules/spoofing]]: Phân tích chi tiết thuật toán sinh ID giả mạo, Network restart, Disk spoofing.
-  - [[docs/modules/cleaner]]: Cơ chế xóa logs, cache game launcher, terminate anti-cheat.
+  - [[docs/modules/spoofing]]: Phân tích chi tiết thuật toán sinh ID giả mạo, Volume ID, MAC, Disk.
+  - [[docs/modules/cleaner]]: Cơ chế xóa logs, cache game launcher (PUBG, Steam, Valorant, Blizzard, Ubisoft).
 - `docs/rules/`
   - [[docs/rules/project_rules]]: Bộ nguyên tắc dự án, bảo mật, xử lý UAC / Admin permissions.
   - [[docs/rules/coding_standards]]: Quy chuẩn code C# .NET 6 và C UEFI.

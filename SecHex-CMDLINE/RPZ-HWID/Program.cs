@@ -348,6 +348,38 @@ namespace HWID_Changer
             }
         }
 
+        public static void DeletePubgCache()
+        {
+            try
+            {
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string tslGamePath = Path.Combine(localAppData, "TslGame");
+                if (Directory.Exists(tslGamePath))
+                {
+                    Directory.Delete(tslGamePath, true);
+                }
+
+                string bePath = Path.Combine(localAppData, "BattlEye");
+                if (Directory.Exists(bePath))
+                {
+                    Directory.Delete(bePath, true);
+                }
+
+                string steamLogin = @"C:\Program Files (x86)\Steam\config\loginusers.vdf";
+                if (File.Exists(steamLogin))
+                {
+                    File.Delete(steamLogin);
+                }
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("arp", "-d *") { CreateNoWindow = true, UseShellExecute = false })?.WaitForExit(5000);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ipconfig", "/flushdns") { CreateNoWindow = true, UseShellExecute = false })?.WaitForExit(5000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error deleting PUBG cache: " + ex.Message);
+            }
+        }
+
 
 
         public static bool SpoofMAC() //SpoofMacREAL
@@ -700,11 +732,20 @@ namespace HWID_Changer
                     SpoofMAC();
                     UbisoftCache();
                     DeleteValorantCache();
+                    DeletePubgCache();
                     SpoofGPU();
                     SpoofPCName();
                     SpoofEFIVariableId();
                     SpoofInstallationID();
                     Console.WriteLine("\n  [+] All commands executed");
+                    ClearConsoleAfterDelay();
+                    Menu();
+                    break;
+
+                case "14":
+                    // Delete PUBG & Steam cache
+                    DeletePubgCache();
+                    Console.WriteLine("\n  [+] PUBG, BattlEye & Steam cache deleted");
                     ClearConsoleAfterDelay();
                     Menu();
                     break;
@@ -764,6 +805,7 @@ namespace HWID_Changer
             Console.WriteLine("[11] Check Registry Paths                   ");
             Console.WriteLine("[12] Get System informations                ");
             Console.WriteLine("[13] Spoof all                              ");
+            Console.WriteLine("[14] Delete PUBG & Steam Cache              ");
             Console.WriteLine("[exit] Exit                                 ");
             Console.WriteLine("  ");
             Console.ForegroundColor
