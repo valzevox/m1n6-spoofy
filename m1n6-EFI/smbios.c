@@ -1,14 +1,13 @@
 /*
  * m1n6-EFI / smbios.c
  * Language: C (UEFI EDK2 Standard)
- * Description: Scanning and modifying SMBIOS Type 1, 2, 3 in UEFI memory
+ * Description: Scanning, modifying and recalculating checksums for SMBIOS Type 1, 2, 3 in UEFI memory
  */
 
 #include "smbios.h"
 
 STATIC UINT64 gSeed = 0x8A5B3C4D5E6F7081ULL;
 
-STATIC
 UINT32
 M1n6Random32(VOID)
 {
@@ -59,6 +58,27 @@ M1n6GetSmbiosString(
     }
 
     return (*Str == '\0') ? NULL : Str;
+}
+
+STATIC
+UINT8
+M1n6CalculateChecksum(
+    IN UINT8 *Buffer,
+    IN UINTN Length
+)
+{
+    UINT8 Checksum = 0;
+    UINTN i;
+
+    if (Buffer == NULL) {
+        return 0;
+    }
+
+    for (i = 0; i < Length; i++) {
+        Checksum = (UINT8)(Checksum + Buffer[i]);
+    }
+
+    return (UINT8)(0 - Checksum);
 }
 
 EFI_STATUS
@@ -141,6 +161,19 @@ M1n6SpoofSmbiosTables(
         Record += 2;
     }
 
-    Print(L"[m1n6-EFI] SMBIOS Tables successfully spoofed\n");
+    /* Recalculate SMBIOS 2.x / 3.x Checksums so Anti-Cheat verification passes */
+    SmbiosEntry->IntermediateChecksum = 0;
+    SmbiosEntry->IntermediateChecksum = M1n6CalculateChecksum(
+        (UINT8*)SmbiosEntry + 0x10,
+        0x0F
+    );
+
+    SmbiosEntry->EntryPointStructureChecksum = 0;
+    SmbiosEntry->EntryPointStructureChecksum = M1n6CalculateChecksum(
+        (UINT8*)SmbiosEntry,
+        SmbiosEntry->EntryPointLength
+    );
+
+    Print(L"[m1n6-EFI] SMBIOS Tables and Checksums successfully spoofed\n");
     return EFI_SUCCESS;
 }

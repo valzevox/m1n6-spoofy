@@ -58,6 +58,9 @@ typedef struct {
 
 #pragma pack()
 
+UINT32
+M1n6Random32(VOID);
+
 EFI_STATUS
 M1n6SpoofSmbiosTables(
     IN EFI_SYSTEM_TABLE *SystemTable

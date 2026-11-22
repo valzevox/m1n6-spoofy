@@ -11,6 +11,7 @@
 - **Architecture Overview**: [[docs/architecture/overview]]
 - **PUBG Anti-Cheat Stack & 24h Ban Analysis**: [[docs/architecture/pubg_anticheat_ecosystem]]
 - **Valorant / Vanguard Deep Dive (HWID, KMBox Input, OBS Overlay)**: [[docs/architecture/valorant_vanguard_deepdive]]
+- **AI Aimbot, Recoil & Overlay Ecosystem (Tài liệu độc lập)**: [[docs/architecture/ai_aimbot_overlay_ecosystem]]
 - **Kernel Anti-Cheat Analysis (Vanguard, ACE, EAC)**: [[docs/architecture/kernel_anticheat_analysis]]
 - **UEFI Bootloader Engine (m1n6-EFI)**: [[docs/architecture/uefi_bootloader]]
 - **Component & Execution Flow**: [[docs/architecture/components]]
