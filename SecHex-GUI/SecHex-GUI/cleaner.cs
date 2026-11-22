@@ -624,6 +624,94 @@ namespace SecHex_GUI
             }
         }
 
+        public void CleanDeltaForceAndAceTraces()
+        {
+            try
+            {
+                // 1. Terminate Delta Force & Tencent ACE processes
+                KillProcess("DeltaForce.exe");
+                KillProcess("DeltaForce-Win64-Shipping.exe");
+                KillProcess("DeltaForce_Win64_Shipping.exe");
+                KillProcess("SGuard64.exe");
+                KillProcess("SGuard32.exe");
+                KillProcess("SGuardUpdateService.exe");
+                KillProcess("steam.exe");
+                KillProcess("steamwebhelper.exe");
+
+                StopService("ACE-BASE");
+                StopService("SGuardUpdateService");
+
+                // 2. Clear Delta Force & ACE Telemetry Directories
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string commonAppData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                string commonProgFiles = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles);
+                string commonProgFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFilesX86);
+
+                DeleteDirectory(Path.Combine(localAppData, "DeltaForce"));
+                DeleteDirectory(Path.Combine(appData, "Tencent\\AntiCheatExpert"));
+                DeleteDirectory(Path.Combine(commonAppData, "Tencent\\AntiCheatExpert"));
+                DeleteDirectory(Path.Combine(commonProgFiles, "Tencent\\AntiCheatExpert"));
+                DeleteDirectory(Path.Combine(commonProgFilesX86, "Tencent\\AntiCheatExpert"));
+
+                // 3. Clear Steam Account Chaining Traces
+                string[] possibleSteamPaths = new string[]
+                {
+                    @"C:\Program Files (x86)\Steam",
+                    @"C:\Program Files\Steam",
+                    @"D:\Steam",
+                    @"E:\Steam"
+                };
+
+                foreach (string steamDir in possibleSteamPaths)
+                {
+                    if (Directory.Exists(steamDir))
+                    {
+                        string loginUsersFile = Path.Combine(steamDir, "config", "loginusers.vdf");
+                        if (File.Exists(loginUsersFile))
+                        {
+                            File.Delete(loginUsersFile);
+                        }
+
+                        string configFile = Path.Combine(steamDir, "config", "config.vdf");
+                        if (File.Exists(configFile))
+                        {
+                            File.Delete(configFile);
+                        }
+
+                        string userDataDir = Path.Combine(steamDir, "userdata");
+                        if (Directory.Exists(userDataDir))
+                        {
+                            foreach (var sub in Directory.GetDirectories(userDataDir))
+                            {
+                                DeleteDirectory(sub);
+                            }
+                        }
+                    }
+                }
+
+                // 4. Clean Registry Steam & Tencent ACE Entries
+                DeleteRegistryKey(@"Software\Valve\Steam\Users");
+                DeleteRegistryKey(@"Software\Tencent\AntiCheatExpert");
+
+                // 5. Network ARP & DNS Flush
+                RunCommand("arp", "-d *");
+                RunCommand("ipconfig", "/flushdns");
+                RunCommand("ipconfig", "/release");
+                RunCommand("ipconfig", "/renew");
+
+                // 6. Randomize Volume IDs
+                VolumeIdChanger.SpoofDriveVolumeId('C', out string newC, out _);
+                VolumeIdChanger.SpoofDriveVolumeId('D', out string newD, out _);
+
+                ShowNotification("Delta Force & Tencent ACE traces cleared. Volume IDs randomized.\nRestart PC and change Router IP before logging in.", NotificationType.Success);
+            }
+            catch (Exception ex)
+            {
+                ShowNotification("Error cleaning Delta Force traces: " + ex.Message, NotificationType.Error);
+            }
+        }
+
 
         // THANKS TO Starcharms -> github.com/starcharms
 
