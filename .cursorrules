@@ -1,0 +1,15 @@
+# Cursor Rules for SecHex-Spoofy
+
+## Context & Architecture
+- Project: SecHex-Spoofy (User-mode HWID Changer & Cleaner in C# .NET 6.0)
+- Documentation Vault: docs/00_Index_MOC.md (Obsidian wiki-links formatted)
+- Architecture details: docs/architecture/overview.md
+- Registry mappings: docs/registry/hardware_keys.md
+
+## Coding Standards
+1. Use modern C# 10 features (.NET 6.0).
+2. Always wrap Win32 RegistryKey, Process, and Stream handles in `using` declarations.
+3. Validate RegistryKey nullability before calling `GetValue` or `SetValue`.
+4. Ensure proper exception handling for `SecurityException` when modifying HKLM keys.
+5. In GUI code (WinForms), offload blocking shell/disk operations from UI thread.
+6. When referencing documentation, use Obsidian wiki-links: `[[docs/path/to/note]]`.
