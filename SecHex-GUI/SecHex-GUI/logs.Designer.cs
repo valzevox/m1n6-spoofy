@@ -74,7 +74,7 @@
             sechex.Name = "sechex";
             sechex.Size = new Size(108, 21);
             sechex.TabIndex = 4;
-            sechex.Text = "SecHex - Logs";
+            sechex.Text = "m1n6 - Logs";
             sechex.Click += sechex_Click;
             // 
             // richTextBoxLogs

@@ -710,7 +710,7 @@ namespace SecHex_GUI
 
         private void ShowNotification(string message, NotificationType type)
         {
-            MessageBox.Show(message, "Spoofy [Open Source]", MessageBoxButtons.OK, GetNotificationIcon(type));
+            MessageBox.Show(message, "m1n6-spoofy [Open Source]", MessageBoxButtons.OK, GetNotificationIcon(type));
         }
         private MessageBoxIcon GetNotificationIcon(NotificationType type)
         {
